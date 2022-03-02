@@ -4,6 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:alpha="1"
+    android:background="#00987B7B"
+    android:backgroundTintMode="src_over"
     tools:context=".NotesActivity">
 
+    <Button
+        android:id="@+id/addNote"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="addNote"
+        android:text="Add Note"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="0dp"
+        android:layout_height="729dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        app:columnCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="noteMenu"
+            android:padding="55dp"
+            android:text="note" />
+
+        <TextView
+            android:id="@+id/note5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="noteMenu"
+            android:padding="55dp"
+            android:text="note" />
+
+        <TextView
+            android:id="@+id/note6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="noteMenu"
+            android:padding="55dp"
+            android:text="note" />
+
+        <TextView
+            android:id="@+id/note7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="noteMenu"
+            android:padding="55dp"
+            android:text="note" />
+
+        <TextView
+            android:id="@+id/note8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="noteMenu"
+            android:padding="55dp"
+            android:text="note" />
+
+    </androidx.gridlayout.widget.GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
