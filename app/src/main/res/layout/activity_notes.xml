@@ -33,47 +33,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="noteMenu"
-            android:padding="55dp"
-            android:text="note" />
-
-        <TextView
-            android:id="@+id/note5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="noteMenu"
-            android:padding="55dp"
-            android:text="note" />
-
-        <TextView
-            android:id="@+id/note6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="noteMenu"
-            android:padding="55dp"
-            android:text="note" />
-
-        <TextView
-            android:id="@+id/note7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="noteMenu"
-            android:padding="55dp"
-            android:text="note" />
-
-        <TextView
-            android:id="@+id/note8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="noteMenu"
-            android:padding="55dp"
-            android:text="note" />
-
-    </androidx.gridlayout.widget.GridLayout>
+        app:layout_constraintVertical_bias="0.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
