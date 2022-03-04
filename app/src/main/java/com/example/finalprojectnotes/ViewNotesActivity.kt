@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.children
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlin.system.exitProcess
@@ -41,6 +43,7 @@ class ViewNotesActivity : AppCompatActivity() {
             }
             finish()
         }
+
     }
 
     fun back(view: View) {

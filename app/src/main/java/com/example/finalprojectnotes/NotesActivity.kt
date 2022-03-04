@@ -26,9 +26,8 @@ class NotesActivity : AppCompatActivity() {
             FirebaseDatabase.getInstance().reference.child("users")
                 .child(it).child("notes").addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        for (child in gridLayout.children) {
-                            gridLayout.removeView(child)
-                        }
+                        notes.clear()
+                        gridLayout.removeAllViews()
                         if (snapshot.exists()) {
                             for (s in snapshot.children) {
                                 var noteList: ArrayList<String> = ArrayList()
@@ -61,10 +60,6 @@ class NotesActivity : AppCompatActivity() {
 
                 })
             }
-    }
-
-    fun noteMenu(view: View) {
-
     }
 
     fun addNote(view: View) {
