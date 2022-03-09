@@ -24,7 +24,9 @@ class NotesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
+
         var linearLayout: LinearLayout = findViewById(R.id.linearLayout)
+
         mAuth.currentUser?.uid?.let { test ->
             FirebaseDatabase.getInstance().reference.child("users")
                 .child(test).child("notes").addValueEventListener(object : ValueEventListener {

@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alpha="1"
-    android:background="#00987B7B"
+    android:background="@drawable/geometric_background"
+    android:backgroundTint="#802C2C2C"
     android:backgroundTintMode="src_over"
     tools:context=".NotesActivity">
 
     <Button
-        android:id="@+id/addNote"
+        android:id="@+id/addNoteBtn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="25dp"
