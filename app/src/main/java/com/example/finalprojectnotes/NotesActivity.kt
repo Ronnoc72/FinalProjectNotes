@@ -1,6 +1,8 @@
 package com.example.finalprojectnotes
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +12,12 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import android.app.AlertDialog
+import android.os.Build
+import android.os.Handler
+import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.util.*
@@ -20,12 +27,20 @@ class NotesActivity : AppCompatActivity() {
 
     val mAuth = FirebaseAuth.getInstance()
     var notes: ArrayList<ArrayList<String>> = ArrayList()
+    var linearLayout: LinearLayout? = null
+    var title: EditText? = null
+    var note: EditText? = null
+    var createNoteLayout: ConstraintLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
 
-        var linearLayout: LinearLayout = findViewById(R.id.linearLayout)
+        title = findViewById(R.id.titleEditText)
+        note = findViewById(R.id.noteEditText)
+        createNoteLayout = findViewById(R.id.createNoteLayout)
+
+        linearLayout = findViewById(R.id.linearLayout)
 
         mAuth.currentUser?.uid?.let { test ->
             FirebaseDatabase.getInstance().reference.child("users")
@@ -33,7 +48,7 @@ class NotesActivity : AppCompatActivity() {
                     @SuppressLint("ResourceType")
                     override fun onDataChange(snapshot: DataSnapshot) {
                         notes.clear()
-                        linearLayout.removeAllViews()
+                        linearLayout?.removeAllViews()
                         if (snapshot.exists()) {
                             for (s in snapshot.children) {
                                 var noteList: ArrayList<String> = ArrayList()
@@ -82,7 +97,7 @@ class NotesActivity : AppCompatActivity() {
                             }
                             textView.height = 360
                             textView.width = 360
-                            linearLayout.addView(textView)
+                            linearLayout?.addView(textView)
                         }
                     }
 
@@ -94,9 +109,37 @@ class NotesActivity : AppCompatActivity() {
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("ObjectAnimatorBinding")
     fun addNote(view: View) {
-        val intent = Intent(this, CreateNoteActivity::class.java)
-        startActivity(intent)
+        ObjectAnimator.ofFloat(this.linearLayout, "translationX", 700f).apply {
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(this.createNoteLayout, "translationY", -1000f).apply {
+            duration = 500
+            startDelay = 500
+            start()
+        }
+    }
+
+    fun createNote(view: View) {
+        var titleText = title?.text.toString()
+        var noteText = note?.text.toString()
+        val noteMap: Map<String, String> = mapOf("title" to titleText,
+            "note" to noteText)
+
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+        FirebaseDatabase.getInstance().reference.child("users")
+            .child(currentUser).child("notes").push().setValue(noteMap).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val intent = Intent(this, NotesActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Note Create Failed, Try Again", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     fun signOut(view: View) {
