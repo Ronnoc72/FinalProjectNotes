@@ -9,13 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import android.app.AlertDialog
+import android.content.Context
+import android.hardware.input.InputManager
 import android.os.Build
 import android.os.Handler
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +31,12 @@ class NotesActivity : AppCompatActivity() {
     var title: EditText? = null
     var note: EditText? = null
     var createNoteLayout: ConstraintLayout? = null
+    var signOutButton: Button? = null
+    var addNoteButton: Button? = null
+    var titleText: EditText? = null
+    var noteText: EditText? = null
+    var saveNoteLayout: ConstraintLayout? = null
+    var currentNoteKey: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +45,15 @@ class NotesActivity : AppCompatActivity() {
         title = findViewById(R.id.titleEditText)
         note = findViewById(R.id.noteEditText)
         createNoteLayout = findViewById(R.id.createNoteLayout)
+        saveNoteLayout = findViewById(R.id.saveNoteLayout)
 
         linearLayout = findViewById(R.id.linearLayout)
+        signOutButton = findViewById(R.id.signOutBtn)
+        addNoteButton = findViewById(R.id.addNoteBtn)
+        titleText = findViewById(R.id.viewTitleEditText)
+        noteText = findViewById(R.id.viewNoteEditText)
+
+        closeKeyboard()
 
         mAuth.currentUser?.uid?.let { test ->
             FirebaseDatabase.getInstance().reference.child("users")
@@ -89,11 +102,12 @@ class NotesActivity : AppCompatActivity() {
                             textView.textSize = 24F
                             textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                             textView.setOnClickListener { task ->
-                                var intent = Intent(this@NotesActivity, ViewNotesActivity::class.java)
-                                intent.putExtra("title", note[1])
-                                intent.putExtra("note", note[0])
-                                intent.putExtra("key", note[2])
-                                startActivity(intent)
+                                this@NotesActivity.saveNoteLayout?.let { moveMainActivity(it) }
+                                titleText?.isEnabled = true
+                                titleText?.setText(note[1])
+                                noteText?.isEnabled = true
+                                noteText?.setText(note[0])
+                                currentNoteKey = note[2]
                             }
                             textView.height = 360
                             textView.width = 360
@@ -112,15 +126,58 @@ class NotesActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ObjectAnimatorBinding")
     fun addNote(view: View) {
+        title?.isEnabled = true
+        note?.isEnabled = true
+        this.createNoteLayout?.let { moveMainActivity(it) }
+    }
+
+    fun moveMainActivity(view: ConstraintLayout) {
         ObjectAnimator.ofFloat(this.linearLayout, "translationX", 700f).apply {
             duration = 500
             start()
         }
-        ObjectAnimator.ofFloat(this.createNoteLayout, "translationY", -1000f).apply {
+        ObjectAnimator.ofFloat(this.signOutButton, "translationX", -400f).apply {
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(this.addNoteButton, "translationX", 400f).apply {
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(view, "translationY", 0f).apply {
             duration = 500
             startDelay = 500
             start()
         }
+        closeKeyboard()
+    }
+
+    fun closeLayout(view: ConstraintLayout, amount: Float) {
+        ObjectAnimator.ofFloat(view, "translationY", amount).apply {
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(this.linearLayout, "translationX", 0f).apply {
+            startDelay = 500
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(this.signOutButton, "translationX", 0f).apply {
+            startDelay = 500
+            duration = 500
+            start()
+        }
+        ObjectAnimator.ofFloat(this.addNoteButton, "translationX", 0f).apply {
+            startDelay = 500
+            duration = 500
+            start()
+        }
+    }
+
+    fun closeWindow(view: View) {
+        this.createNoteLayout?.let { closeLayout(it, 2000f) }
+        title?.isEnabled = false
+        note?.isEnabled = false
     }
 
     fun createNote(view: View) {
@@ -140,6 +197,44 @@ class NotesActivity : AppCompatActivity() {
                     Toast.makeText(this, "Note Create Failed, Try Again", Toast.LENGTH_SHORT).show()
                 }
             }
+        this.createNoteLayout?.let { closeWindow(it) }
+    }
+
+    fun saveNote(view: View) {
+        if (noteText?.text.isNullOrEmpty() || titleText?.text.isNullOrEmpty()) {
+            Toast.makeText(this, "You must have Content in both Title and Note.", Toast.LENGTH_SHORT).show()
+        } else {
+            mAuth.currentUser?.uid?.let {
+                currentNoteKey?.let { it1 ->
+                    FirebaseDatabase.getInstance().reference.child("users")
+                        .child(it).child("notes").child(it1)
+                        .child("note").setValue(noteText?.text.toString())
+                }
+                currentNoteKey?.let { it1 ->
+                    FirebaseDatabase.getInstance().reference.child("users")
+                        .child(it).child("notes").child(it1)
+                        .child("title").setValue(titleText?.text.toString())
+                }
+            }
+            this.saveNoteLayout?.let { closeLayout(it, -2000f) }
+            titleText?.isEnabled = false
+            noteText?.isEnabled = false
+        }
+
+    }
+
+    fun closeKeyboard() {
+        var view = this@NotesActivity.currentFocus
+        if (view != null) {
+            var imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    fun back(view: View) {
+        this.saveNoteLayout?.let { closeLayout(it, -2000f) }
+        titleText?.isEnabled = false
+        noteText?.isEnabled = false
     }
 
     fun signOut(view: View) {
