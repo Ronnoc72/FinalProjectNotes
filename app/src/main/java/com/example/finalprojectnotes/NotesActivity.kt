@@ -98,7 +98,7 @@ class NotesActivity : AppCompatActivity() {
                                 ) else it.toString()
                             })
                             textView.textSize = 24F
-                            textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                            textView.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
                             textView.setOnClickListener { task ->
                                 this@NotesActivity.saveNoteLayout?.let { moveMainActivity(it) }
                                 titleText?.isEnabled = true
@@ -107,8 +107,10 @@ class NotesActivity : AppCompatActivity() {
                                 noteText?.setText(note[0])
                                 currentNoteKey = note[2]
                             }
-                            textView.height = 360
-                            textView.width = 360
+                            textView.setPadding(0, 40, 40, 40)
+                            textView.height = 320
+                            textView.width = 320
+                            textView.setBackgroundResource(R.drawable.common_google_signin_btn_text_light_normal_background)
                             linearLayout?.addView(textView)
                         }
                         closeKeyboard()
