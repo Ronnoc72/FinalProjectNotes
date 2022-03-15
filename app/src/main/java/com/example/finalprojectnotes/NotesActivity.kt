@@ -53,8 +53,6 @@ class NotesActivity : AppCompatActivity() {
         titleText = findViewById(R.id.viewTitleEditText)
         noteText = findViewById(R.id.viewNoteEditText)
 
-        closeKeyboard()
-
         mAuth.currentUser?.uid?.let { test ->
             FirebaseDatabase.getInstance().reference.child("users")
                 .child(test).child("notes").addValueEventListener(object : ValueEventListener {
@@ -113,6 +111,7 @@ class NotesActivity : AppCompatActivity() {
                             textView.width = 360
                             linearLayout?.addView(textView)
                         }
+                        closeKeyboard()
                     }
 
                     override fun onCancelled(error: DatabaseError) {
