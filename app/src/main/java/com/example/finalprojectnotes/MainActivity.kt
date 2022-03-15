@@ -1,9 +1,11 @@
 package com.example.finalprojectnotes
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     var emailEditText: EditText? = null
     var passwordEditText: EditText? = null
+    var signInBtn: Button? = null
     val mAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
+        signInBtn = findViewById(R.id.goButton)
 
         if (mAuth.currentUser != null) {
             logIn()
